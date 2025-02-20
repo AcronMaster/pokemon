@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:pokemon/button.dart';
 import 'package:pokemon/charaters/boy.dart';
 import 'package:pokemon/maps/littleroot.dart';
+import 'package:pokemon/maps/pokelap.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,9 +39,16 @@ class _HomePageState extends State<HomePage> {
 
   double lapMapX = 0;
   double lapMapY = 0;
+
   String currentLocation = "littleroot"; // Ubicación actual del jugador
   double step = 0.25; // Tamaño del paso al moverse
 
+  // ignore: unused_field
+  static double steplab = 0.43;
+
+  List<List<double>> noMansLandLab = [
+    [0.5, 0.5],
+  ];
   // Lista de coordenadas que representan áreas inaccesibles (colisiones) en el mapa
   List<List<double>> noMansLandlitteroot = [
     [2.1, 0.375],
@@ -142,19 +150,24 @@ class _HomePageState extends State<HomePage> {
           mapY += step;
         });
       }
-      if (double.parse((mapX).toStringAsFixed(4)) == 0.6250 &&
-          double.parse((mapY).toStringAsFixed(4)) == -1.1) {
+      if (double.parse((mapX).toStringAsFixed(4)) == 0.35 &&
+          double.parse((mapY).toStringAsFixed(4)) == -0.625) {
         setState(() {
           currentLocation = "pokelap";
           lapMapX = 0;
           lapMapY = -2.73;
         });
       }
-      animeWalk();
+    } else if (currentLocation == "pokelap") {
+      if (canMove(boyDirection, noMansLandLab, lapMapX, lapMapY)) {
+        setState(() {
+          lapMapY += step;
+        });
+      }
     }
+    animeWalk();
   }
 
-  // Función para mover al personaje hacia abajo
   void moveDown() {
     boyDirection = "Dow";
     if (currentLocation == "littleroot") {
@@ -163,11 +176,27 @@ class _HomePageState extends State<HomePage> {
           mapY -= step;
         });
       }
-      animeWalk();
+    } else if (currentLocation == "pokelap") {
+      if (canMove(boyDirection, noMansLandLab, lapMapX, lapMapY)) {
+        setState(() {
+          lapMapY -= step;
+        });
+      }
     }
+    if (currentLocation == "pokelap") {
+      if (double.parse((lapMapX).toStringAsFixed(4)) == 0.0 &&
+          double.parse((lapMapY).toStringAsFixed(4)) == -2.73) {
+        setState(() {
+          currentLocation = "littleroot";
+          mapX = 0.35;
+          mapY = -0.625;
+        });
+      }
+    }
+
+    animeWalk();
   }
 
-  // Función para mover al personaje hacia la izquierda
   void moveLeft() {
     boyDirection = "Left";
     if (currentLocation == "littleroot") {
@@ -176,11 +205,16 @@ class _HomePageState extends State<HomePage> {
           mapX += step;
         });
       }
-      animeWalk();
+    } else if (currentLocation == "pokelap") {
+      if (canMove(boyDirection, noMansLandLab, lapMapX, lapMapY)) {
+        setState(() {
+          lapMapX += step;
+        });
+      }
     }
+    animeWalk();
   }
 
-  // Función para mover al personaje hacia la derecha
   void moveRigth() {
     boyDirection = "Rigth";
     if (currentLocation == "littleroot") {
@@ -189,8 +223,14 @@ class _HomePageState extends State<HomePage> {
           mapX -= step;
         });
       }
-      animeWalk();
+    } else if (currentLocation == "pokelap") {
+      if (canMove(boyDirection, noMansLandLab, lapMapX, lapMapY)) {
+        setState(() {
+          lapMapX -= step;
+        });
+      }
     }
+    animeWalk();
   }
 
   void pressedA() {} // Acción cuando se presiona el botón "A"
@@ -258,6 +298,12 @@ class _HomePageState extends State<HomePage> {
                   Littleroot(
                     x: mapX,
                     y: mapY,
+                    currentMap: currentLocation,
+                  ),
+                  //Laboratorio pokemon
+                  MyPokelap(
+                    x: lapMapX,
+                    y: lapMapY,
                     currentMap: currentLocation,
                   ),
                   Container(

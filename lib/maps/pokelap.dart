@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class MyPokelap extends StatefulWidget {
+class MyPokelap extends StatelessWidget {
   double x;
   double y;
-  String currteMap;
+  String currentMap;
 
-  MyPokelap({required this.x, required this.y, required this.currteMap});
+  MyPokelap({
+    required this.x,
+    required this.y,
+    required this.currentMap,
+  });
 
   @override
-  // ignore: override_on_non_overriding_member
   Widget build(BuildContext context) {
-    if (currteMap == "pokelap") {
+    print("Pokelab: x=$x, y=$y, currentMap=$currentMap"); // Debug
+
+    if (currentMap == "pokelap") {
       return Container(
         alignment: Alignment(x, y),
         child: Image.asset(
-          "lib/images/pokelap.png",
+          "lib/images/pokelab.png",
           width: MediaQuery.of(context).size.width * 0.75,
           fit: BoxFit.cover,
         ),
@@ -24,7 +29,4 @@ class MyPokelap extends StatefulWidget {
       return Container();
     }
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
